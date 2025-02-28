@@ -1,2 +1,3 @@
-# ratings
-Ratings and reviews are used to examine key metrics in products, services, as well a financial planning. This analysis uses data analytics to predict ratings and reviews for Yelp in particular with wide application for other businesses. 
+# Ratings
+Executive Summary
+Ratings and reviews are used to examine key metrics in products, services, as well a financial planning. This analysis uses data analytics to predict ratings and reviews for Yelp in particular with wide application for other businesses. The algorithms tried in this project included machine learning techniques that can work with unbalanced datasets that could have missing values. The project came to the conclusion that Random Forest, a machine learning algorithm, is best suited compared to linear regression which was not able to handle the complexity of the dataset. Datasets that have complex variable relationships such as the attributes for restaurants that were examined in the Yelp dataset cannot always be depicted by linear relationships. Another method explored was bootstrap aggregation which came with its own limitations such as overfitting the dataset.
