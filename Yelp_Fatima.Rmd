@@ -1,0 +1,591 @@
+---
+title: "Yelp_Fatima"
+output: html_document
+date: '2023-09-23'
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+##Import Packages
+
+
+
+```{r}
+library(tidyverse)
+library(dplyr)
+library(ggplot2)
+library(tidyr)
+```
+
+##Import Data + External Dara
+```{r}
+library(readr)
+YelpFoodRest_noreviews <- read_csv("YelpFoodRest.noreviews.csv")
+View(YelpFoodRest_noreviews)
+
+yelpEx <- read_csv("yelp_income_joined.csv")
+View(yelpEx)
+```
+
+##Glimpse/Summary Stats
+```{r}
+glimpse(YelpFoodRest_noreviews)
+
+summary(YelpFoodRest_noreviews)
+
+summary(YelpFoodRest_noreviews$review_count)
+
+```
+
+
+
+##Filter by City
+```{r}
+yelpCity <- filter(YelpFoodRest_noreviews, city == "Tucson" | city == "Nashville" | city == "Philadelphia" | city == "Tampa")
+
+View(yelpCity)
+glimpse(yelpCity)
+summary(yelpCity)
+
+##City Distribution
+ggplot(data = yelpCity, aes(x = city)) + geom_bar(fill="orange") + theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) + ggtitle("Distribution by City")
+
+```
+
+##Plotting Univariate Plots of Variables
+```{r}
+library(ggplot2)
+
+#Attributes: Good for Groups
+ggplot(data = yelpCity, aes(x = RestaurantsGoodForGroups)) + geom_bar(fill="blue") + theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) + ggtitle("Good for Groups")
+
+#Attributes: Reservations
+ggplot(data = yelpCity, aes(x = RestaurantsReservations)) + geom_bar(fill="blue") + theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) + ggtitle("Restaurant Reservations")
+
+#Attributes: Outdoor Seating
+ggplot(data = yelpCity, aes(x = OutdoorSeating)) + geom_bar(fill="blue") + theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) + ggtitle("Outdoor Seating")
+
+
+#Attributes: Bike Parking
+ggplot(data = yelpCity, aes(x = BikeParking)) + geom_bar(fill="blue") + theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) + ggtitle("Bike Parking")
+
+#Attributes: Caters
+ggplot(data = yelpCity, aes(x = Caters)) + geom_bar(fill="blue") + theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) + ggtitle("Caters")
+
+#Attributes: GoodForKids
+ggplot(data = yelpCity, aes(x = GoodForKids)) + geom_bar(fill="blue") + theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) + ggtitle("GoodForKids")
+
+#Attributes: WheelChairAccessible
+ggplot(data = yelpCity, aes(x = WheelchairAccessible)) + geom_bar(fill="blue") + theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) + ggtitle("WheelchairAccessible")
+
+#Attributes: RestaurantsTakeOut
+ggplot(data = yelpCity, aes(x = RestaurantsTakeOut)) + geom_bar(fill="blue") + theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) + ggtitle("TakeOut")
+
+#Attributes: RestaurantsDelivery
+ggplot(data = yelpCity, aes(x = RestaurantsDelivery)) + geom_bar(fill="blue") + theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) + ggtitle("Delivery")
+
+
+```
+##Price Range
+```{r}
+#RestaurantsPriceRange2
+ggplot(data = yelpCity, aes(x = RestaurantsPriceRange2)) + geom_bar(fill="blue") + theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) + ggtitle("Restaurant Price Range")
+
+#Price Range by City
+ggplot(data = yelpCity, aes(x = RestaurantsPriceRange2, fill = city)) + geom_bar() + theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) + ggtitle("Price by City")
+
+```
+Most Restaurants and Food places fall under Price Range of 2.
+
+
+##Review Plots
+```{r}
+#Histogram of review counts
+ggplot(yelpCity) +
+  aes(x = review_count) +
+  geom_histogram(bins = 30L, fill = "#0c4c8a") +
+  theme_minimal() + ggtitle("Review Counts")
+
+
+#Density plot of review counts
+ggplot(yelpCity, aes(x=review_count)) + geom_density() + ggtitle("Density Plot of Review Counts")
+
+#Boxplot of review counts
+ggplot(yelpCity) +
+  aes(x = "", y = review_count) +
+  geom_boxplot(fill = "#0c4c8a") +
+  theme_minimal()
+
+
+```
+##Stars Plots
+```{r}
+#Histogram of stars
+ggplot(yelpCity) +
+  aes(x = stars) +
+  geom_histogram(bins = 30L, fill = "#0c4c8a") +
+  theme_minimal()
+
+
+#Density plot of stars
+ggplot(yelpCity, aes(x=stars)) + geom_density() + ggtitle("Density Plot of Stars")
+
+```
+
+
+
+
+##Plotting Reservations and Groups
+```{r}
+ggplot(data = yelpCity, aes(x = RestaurantsGoodForGroups, fill = RestaurantsReservations)) + geom_bar() + theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) + ggtitle("Reservations and Groups")
+
+
+
+```
+
+
+##Plotting Reservations and GoodForKids
+```{r}
+ggplot(data = yelpCity, aes(x = GoodForKids, fill = RestaurantsReservations)) + geom_bar() + theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) + ggtitle("Reservations and GoodForKids")
+
+```
+
+
+##Plotting Outdoor Seating and Bike Parking
+```{r}
+ggplot(data = yelpCity, aes(x = OutdoorSeating, fill = BikeParking)) + geom_bar() + theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) + ggtitle("Outdoor Seating and Bike Parking")
+```
+
+#Star Distribution by City
+```{r}
+ggplot(data = yelpCity, aes(x = stars, fill = city)) + geom_bar() + theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) + ggtitle("Stars by City")
+```
+
+
+
+
+##Tests (Reviews)
+
+```{r pressure, echo=FALSE}
+
+#QQ Plot of Review Counts
+
+qqnorm(yelpCity$review_count,  main="Review Count QQ PLot")
+qqline(yelpCity$review_count)
+
+#Log of Review Counts
+qqnorm(log(yelpCity$review_count), main="Log of Review Count QQ PLot")
+qqline(log(yelpCity$review_count))
+
+#Histogram of review counts
+ggplot(yelpCity) +
+  aes(x = review_count) +
+  geom_histogram(bins = 30L, fill = "#0c4c8a") +
+  theme_minimal() + ggtitle("Review Counts")
+
+#Histogram of review counts with Log
+ggplot(yelpCity) +
+  aes(x = log(review_count)) +
+  geom_histogram(bins = 30L, fill = "#0c4c8a") +
+  theme_minimal() + ggtitle("Review Counts")
+
+
+#Correlation
+cor(select(yelpCity, review_count, stars))
+
+#More Stats
+library(GGally)
+ggpairs(data.frame("Reviews"=yelpCity$review_count, "OutdoorSeating"=yelpCity$OutdoorSeating, "GoodForKids"=yelpCity$GoodForKids, "Stars"=yelpCity$stars, "BikeParking"=yelpCity$BikeParking, "Groups"=yelpCity$RestaurantsGoodForGroups), upper=list(combo='box'))
+
+
+
+
+```
+Review count and number of stars have a low positive correlation.
+
+
+#Preliminary OLS Regression
+```{r}
+fit.unstd <- lm(review_count~state+RestaurantsGoodForGroups+GoodForKids+stars+OutdoorSeating+stars+BikeParking, data = yelpCity)
+summary(fit.unstd)
+
+
+library(lmtest)
+bptest(fit.unstd, data=yelpCity)
+```
+#A few of the variables were added to test basic regression stats before stewise regression and/or other modeling methods will be further explored.
+
+##Separate Categories Column into Rows
+```{r}
+yelpb <-separate_rows(yelpCity, categories, convert = TRUE)
+View(yelpCity)
+
+#Filter by a specific Category
+
+yelpCat <- filter(yelpb, categories == "Sandwiches")
+
+glimpse(yelpCat)
+
+View(yelpCat)
+```
+
+#Outlier Evaluation
+
+```{r}
+#Boxplot of review counts
+ggplot(yelpCity) +
+  aes(x = "", y = log(review_count)) +
+  geom_boxplot(fill = "#0c4c8a") +
+  theme_minimal()
+
+
+#Find rows with outliers and print
+out <- boxplot.stats(yelpCity$review_count)$out
+out_ind <- which(yelpCity$review_count %in% c(out))
+out_ind
+
+Outliers <- yelpCity[out_ind, ]
+View(Outliers)
+
+#Calculate values of lower and upper limits
+lower_bound <- quantile(yelpCity$review_count, 0.025)
+lower_bound
+
+upper_bound <- quantile(yelpCity$review_count, 0.975)
+upper_bound
+
+outlier_ind <- which(yelpCity$review_count < lower_bound | yelpCity$review_count > upper_bound)
+outlier_ind
+
+#Print Outliers
+Outliers <- yelpCity[outlier_ind, ]
+View(Outliers)
+
+#Create new dataset without outliers
+yelp_no_outliers <- yelpCity[-outlier_ind, ]
+View(yelp_no_outliers)
+
+#Boxplot of new data without outliers
+ggplot(yelp_no_outliers) +
+  aes(x = "", y = log(review_count)) +
+  geom_boxplot(fill = "#0c4c8a") +
+  theme_minimal()
+
+```
+All observations below 26 and above 5721 are considered outliers according to the quantile limits set, which is 3,448 entries.
+
+
+
+#Testing Removal of Unfit Columns
+```{r}
+#The following columns might be removed to clean up the data. (Below is another dataset created after removal of unfit columns.)
+
+yelpCity1 <- yelpCity[,-c(12, 13, 19, 24, 28, 33)] 
+
+glimpse(yelpCity1)
+
+View(yelpCity1)
+```
+
+#Split into Train and Test
+```{r}
+
+
+set.seed(15)
+nrow(yelpCity)
+train=sample(nrow(yelpCity), 0.8*nrow(yelpCity))
+yelpCity[train[1:10],]
+
+yelp.train <- yelpCity[train,]
+nrow(yelp.train)
+
+yelp.test <- yelpCity[-train,]
+nrow(yelp.test)
+
+```
+The number of rows of the dataset are listed (145266) along with the train (116212) and test (29054) rows and their length.
+The first 10 values in the test and train vector are listed above as a table.
+
+#Notes
+
+#SQL Query(BigQuery) was used to extract the initial dataset based on the categories "Food" and "Restuarants" along with all the 33 total columns. An external dataset of median and mean income based on the US Census Bureau 2019 Household income by zip code was joined to this dataset. Below is the code.
+
+###Income data
+#income <- read.csv("income_by_postal_code.csv")
+#income$postal_code <- as.character(income$postal_code)
+###Yelp Biz data
+#yelp <- read_csv("YelpFoodRest.noreviews.csv")
+#yelp <- yelp %>% filter(city %in% c("Nashville", "Tucson", "Philadelphia", "Tampa"))
+###Join Income to Yelp
+#yelp = yelp %>% left_join(income,by="postal_code")
+#glimpse(yelp)
+#summary(yelp)
+#write.csv(yelp, file = "yelp_restruants_income.csv")****
+
+#NAs are kept as they might be important in detereming other factors that might strengthen the final evaluaiton of the data when modeling is being performed. In this case they can be treated as a separate category. However, they are removed later for linear regression.
+
+#Columns 12, 13, 19, 24, 28, 33 might be removed as they were not clean and some of the categories were overlapping within the same column making it diffocult to separate the lines.
+
+#The column for categories was separable and the data could be further narrowed down to specific categories if needed.
+
+#The histogram and box plot for the reviews shows that there are outliers. However, these might be important and need to be further looked into. Outlier Evaluation above further explores how they are isolated etc.
+
+#Log Transformation of the review_count variable made it slightly normal but the data still seems skewed.
+
+#The Split for train and test is based on the entire dataset (with the four cities subset). At this point I have not decided whether to include outliers or not.
+
+
+#MODELING
+
+#Preparing
+```{r}
+
+#Prepare new dataset for modeling
+#Removing columns with a high level of NAs and problematic values:
+
+yelp_clean <- yelpEx[ , -which(names(yelpEx) %in% c("goodformeal", "ambience", "drivethru", "restaurantsattire", "wheelchairaccessible", "happyhour", "businessparking", "restaurantstableservice", "coatcheck", "noiselevel", "wifi"))]
+
+#Removing NAs
+yelp_clean <- yelp_clean[complete.cases(yelp_clean), ]
+
+View(yelp_clean)
+glimpse(yelp_clean)
+
+
+
+```
+#Prepare new dataset without Outliers
+```{r}
+#Calculate values of lower and upper limits
+lower_bound <- quantile(yelp_clean$review_count, 0.025)
+lower_bound
+
+upper_bound <- quantile(yelp_clean$review_count, 0.975)
+upper_bound
+
+outlier_ind <- which(yelp_clean$review_count < lower_bound | yelp_clean$review_count > upper_bound)
+
+#Print Outliers
+Outliers <- yelp_clean[outlier_ind, ]
+View(Outliers)
+
+#Create new dataset without outliers
+yelp_clean2 <- yelp_clean[-outlier_ind, ]
+View(yelp_clean2)
+
+```
+
+#Split Train and Test Subsets
+```{r}
+#Continuous variable (review_count)
+library(caTools)
+set.seed(33)
+sample_split <- sample.split(Y = yelp_clean2$review_count, SplitRatio = 0.75)
+train_set <- subset(x = yelp_clean2, sample_split == TRUE)
+test_set <- subset(x = yelp_clean2, sample_split == FALSE)
+```
+
+
+
+#Modeling
+
+```{r}
+##Dependant Variable: review_count
+
+#Linear Regression (fit 1)
+fit1 <- lm(review_count~state+restaurantstakeout+restaurantsdelivery+restaurantsgoodforgroups+goodforkids+stars+outdoorseating+bikeparking+restaurantsreservations+outdoorseating+restaurantspricerange2+latitude+longitude+hastv+caters, data=yelp_clean)
+summary(fit1)
+
+
+#Stepwise Linear Regression
+#define intercept-only model
+intercept_only <- lm(review_count ~ 1, data=yelp_clean)
+#stepwise
+stepwise <- step(intercept_only, direction='forward', scope=formula(fit.all), trace=0)
+#anova
+stepwise$anova
+
+#Linear Regression with outliers removed (fit 2)
+fit2 <- lm(review_count~state+restaurantstakeout+restaurantsdelivery+restaurantsgoodforgroups+goodforkids+stars+outdoorseating+bikeparking+restaurantsreservations+outdoorseating+restaurantspricerange2+latitude+longitude+hastv+caters, data=yelp_clean2)
+
+summary(fit2)
+
+
+
+```
+
+#Linear Regression (fit 3) and Chart
+```{r}
+#Interaction Model
+
+fit3 <- lm(review_count~state+restaurantstakeout+restaurantsdelivery+goodforkids+restaurantsreservations++restaurantsgoodforgroups+stars+bikeparking+outdoorseating++restaurantspricerange2+latitude+longitude+hastv+caters+restaurantsreservations*restaurantsgoodforgroups+bikeparking*outdoorseating+goodforkids*restaurantstakeout, data=yelp_clean2)
+
+summary(fit3)
+
+lapply(list(fit1, fit2, fit3), BIC)
+
+```
+
+#Decision Tree
+```{r}
+
+#Decision Tree 1
+library(tree)
+fit.tree1 <- tree(review_count~state+restaurantstakeout+restaurantsdelivery+restaurantsgoodforgroups+goodforkids+stars+outdoorseating+bikeparking+restaurantsreservations+outdoorseating+restaurantspricerange2+latitude+longitude+hastv+caters, data=yelp_clean2)
+plot(fit.tree1)
+text(fit.tree1, pretty=0)
+title("Review Count Decision Tree")
+
+
+#Decision Tree 2
+fit.tree2 <- tree(review_count~state+restaurantstakeout+restaurantsdelivery+restaurantsgoodforgroups+goodforkids+stars+outdoorseating+bikeparking+restaurantsreservations+outdoorseating+restaurantspricerange2+hastv+caters, data=yelp_clean2)
+plot(fit.tree2)
+text(fit.tree2, pretty=0)
+title("Review Count Decision Tree")
+
+#Decision Tree 3
+fit.tree3 <- tree(review_count~state+restaurantstakeout+restaurantsdelivery+restaurantsgoodforgroups+goodforkids+stars+outdoorseating+bikeparking+restaurantsreservations+outdoorseating+hastv+caters, data=yelp_clean2)
+plot(fit.tree3)
+text(fit.tree3, pretty=0)
+title("Review Count Decision Tree")
+
+#Decision Tree 4
+fit.tree4 <- tree(review_count~state+restaurantstakeout+restaurantsdelivery+restaurantsgoodforgroups+goodforkids+outdoorseating+bikeparking+restaurantsreservations+outdoorseating+hastv+caters+stars+mean_income, data=yelp_clean2)
+plot(fit.tree4)
+text(fit.tree4, pretty=0)
+title("Review Count Decision Tree")
+
+#Decision Tree 5 with all variables
+fit.tree5 <- tree(review_count~., data=yelp_clean2)
+plot(fit.tree5)
+text(fit.tree5, pretty=0)
+title("Review Count Decision Tree")
+
+#Decision Tree 6
+fit.tree6 <- tree(review_count~., data=yelp_clean2)
+plot(fit.tree5)
+text(fit.tree5, pretty=0)
+title("Review Count Decision Tree")
+
+
+#Decision Tree 6
+fit.tree6 <- tree(stars~., data=yelp_clean2)
+plot(fit.tree6)
+text(fit.tree6, pretty=0)
+title("Review Count Decision Tree")
+
+#Decision Tree 7
+fit.tree7 <- tree(stars~state+restaurantstakeout+restaurantsdelivery+restaurantsgoodforgroups+goodforkids+review_count+outdoorseating+bikeparking+restaurantsreservations+outdoorseating+hastv+caters, data=yelp_clean2)
+plot(fit.tree7)
+text(fit.tree7, pretty=0)
+title("Review Count Decision Tree")
+
+
+```
+#Decision Classification Tree
+```{r}
+library(rpart)
+library(rpart.plot)
+set.seed(1234)
+ind <- sample(2, nrow(yelp_clean2), replace = T, prob = c(0.5, 0.5))
+train <- yelp_clean2[ind == 1,]
+test <- yelp_clean2[ind == 2,]
+#Tree Classification
+tree <- rpart(stars~state+restaurantstakeout+restaurantsdelivery+restaurantsgoodforgroups+goodforkids+outdoorseating+bikeparking+restaurantsreservations+outdoorseating+hastv+caters+review_count, data = train)
+
+rpart.plot(tree)
+
+
+printcp(tree)
+
+plotcp(tree)
+
+# Load the necessary library
+library(caret)
+library(dplyr)
+
+importances <- varImp(tree) 
+importances %>%
+  arrange(desc(Overall))
+
+
+
+```
+#Bootstrap Aggregation (Bagging) (quantitative variable: review_count)
+```{r}
+#Trying Random Forest first with mytry=4 or using 4 predictors
+
+library(randomForest)
+rf.review.four <- randomForest(review_count~state+restaurantstakeout+restaurantsdelivery+restaurantsgoodforgroups+goodforkids+stars+outdoorseating+bikeparking+restaurantsreservations+hastv+caters, data=yelp_clean2, mtry=4, importance=T)
+
+bag.review
+
+varImpPlot(rf.review.four)
+
+importance(rf.review.four)
+
+
+#Using all Predictors for Bagging
+bag.review.all <- randomForest(review_count~state+restaurantstakeout+restaurantsdelivery+restaurantsgoodforgroups+goodforkids+stars+outdoorseating+bikeparking+restaurantsreservations+hastv+caters, data=yelp_clean2, mtry=11, importance=T)
+
+bag.review.all
+
+
+varImpPlot(bag.review.all)
+
+importance(bag.review.all)
+```
+
+#Random Forest (RF) Tree
+```{r}
+library(randomForest)
+bag.rf <- randomForest(review_count~state+restaurantstakeout+restaurantsdelivery+restaurantsgoodforgroups+goodforkids+stars+outdoorseating+bikeparking+restaurantsreservations+hastv+caters, data=yelp_clean2, mtry=2, importance=T)
+
+bag.rf
+
+varImpPlot(bag.rf)
+
+importance(bag.rf)
+```
+#Bagging and RF (categorical variable: stars)
+```{r}
+
+#Trying Random Forest first with mtry=4 or using 4 predictors
+library(randomForest)
+rf.star.four <- randomForest(stars~state+restaurantstakeout+restaurantsdelivery+restaurantsgoodforgroups+goodforkids+outdoorseating+bikeparking+restaurantsreservations+hastv+caters+review_count, data=yelp_clean2, mtry=4, importance=T)
+
+rf.star.four
+
+varImpPlot(rf.star.four)
+
+importance(rf.star.four)
+
+
+##With all predictors for Bagging
+bag.star.all <- randomForest(stars~state+restaurantstakeout+restaurantsdelivery+restaurantsgoodforgroups+goodforkids+outdoorseating+bikeparking+restaurantsreservations+hastv+caters+review_count, data=yelp_clean2, mtry=11, importance=T)
+
+bag.star.all
+
+varImpPlot(bag.star.all)
+
+importance(bag.star.all)
+```
+
+#Random Forest (RF) Tree (categorical variable: stars)
+```{r}
+library(randomForest)
+rf.star <- randomForest(stars~state+restaurantstakeout+restaurantsdelivery+restaurantsgoodforgroups+goodforkids+outdoorseating+bikeparking+restaurantsreservations+outdoorseating+hastv+caters+review_count, data=yelp_clean2, mtry=2, importance=T)
+
+rf.star
+
+varImpPlot(rf.star)
+
+importance(rf.star)
+```
+
+#Notes: Attached external dataset did not work with the linear regression model.However, I added it to the decision tree model.
+
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
